@@ -39,12 +39,20 @@ const writeCounter = (count, callback) => {
 // Public API - Fix this function //////////////////////////////////////////////
 
 exports.getNextUniqueId = (callback) => {
-  readCounter((err, id) => {
+  readCounter((err, count) => {
+    //console.log('count in readcounter in gnui',count)
     if (err) {
-      callback(err, null);
+      callback(null, 0); //changed to (null, 0) because if we get an error trying to read count it means we need to set it to zero
     } else {
       //callback(null, data);   
-      writeCounter(id, (err, data))
+      writeCounter(count + 1, (err, newCount) => {
+        if (err) {
+          console.log('error writing new count', err);
+          //not sure what error we'd get but if we do don't return a count
+        } else {
+          callback(null, newCount); //if no error give newCount to writeCounter so it can fs.writeFile a new count
+        }
+      });
     }
   });
 };  
