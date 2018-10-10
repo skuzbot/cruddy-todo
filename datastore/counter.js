@@ -12,7 +12,7 @@ var counter = 0;
 // https://www.google.com/search?q=what+is+a+zero+padded+number%3F
 
 const zeroPaddedNumber = (num) => {
-  return sprintf('%05d', num);
+  return sprintf('%05d', num);        // taking 1 => '0001'
 };
 
 const readCounter = (callback) => {
@@ -38,10 +38,17 @@ const writeCounter = (count, callback) => {
 
 // Public API - Fix this function //////////////////////////////////////////////
 
-exports.getNextUniqueId = () => {
-  counter = counter + 1;
-  return zeroPaddedNumber(counter);
-};
+exports.getNextUniqueId = (callback) => {
+  readCounter((err, id) => {
+    if (err) {
+      callback(err, null);
+    } else {
+      //callback(null, data);   
+      writeCounter(id, (err, data))
+    }
+  });
+};  
+
 
 
 
