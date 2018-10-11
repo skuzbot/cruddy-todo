@@ -40,12 +40,23 @@ exports.readAll = (callback) => {
 };
 
 exports.readOne = (id, callback) => {
-  var text = items[id];
-  if (!text) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    callback(null, { id, text });
-  }
+  //var text = items[id];
+  fs.readdir(exports.dataDir, (err, files) => {
+    if (err) {
+      console.log('err is : ', err);
+      //console.log('error: no directory found');
+    } else {
+      fs.readFile(exports.dataDir, (err, fileData) => {
+        if (err) {
+          console.log('id in fail', id);
+          callback(new Error(`No item with id: ${id}`));
+        } else {
+          console.log('id in else', id);
+          callback({ id, fileData });
+        }
+      });
+    }
+  });
 };
 
 exports.update = (id, text, callback) => {
