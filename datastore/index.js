@@ -9,11 +9,10 @@ var items = {};
 
 exports.create = (text, callback) => {
   counter.getNextUniqueId((err, count, id) => {
-
+    
     id = count;
-    items[id] = text;
-
     const filename = exports.dataDir + '/' + id + '.txt';
+    items[id] = text;
   
     fs.writeFile(filename, text, (err) => {
       if (err) {
@@ -23,18 +22,30 @@ exports.create = (text, callback) => {
       }
     });
   });
-  
-  
-
-
 };
 
 exports.readAll = (callback) => {
-  var data = [];
-  _.each(items, (text, id) => {
-    data.push({ id, text });
+  fs.readdir(exports.dataDir, (err, files) => {
+    if (err) {
+      console.log('error: no directory found');  
+    } else {
+      var data = [];
+      files.forEach(file => {
+        if (file) {
+          fs.readFile(exports.dataDir + '/' + file, (err, fileData) => {
+            if (err) {
+              console.log("dir is : ", exports.dataDir + '/' + file);
+              console.log('error: no file found');
+            } else {
+              console.log('our fileData is: ', fileData);
+              data.push(fileData);
+              callback(null, data);
+            }
+          });
+        }
+      });    
+    }
   });
-  callback(null, data);
 };
 
 exports.readOne = (id, callback) => {
