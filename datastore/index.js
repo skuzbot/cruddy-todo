@@ -31,19 +31,10 @@ exports.readAll = (callback) => {
     } else {
       var data = [];
       files.forEach(file => {
-        if (file) {
-          fs.readFile(exports.dataDir + '/' + file, (err, fileData) => {
-            if (err) {
-              console.log("dir is : ", exports.dataDir + '/' + file);
-              console.log('error: no file found');
-            } else {
-              console.log('our fileData is: ', fileData);
-              data.push(fileData);
-              callback(null, data);
-            }
-          });
-        }
+        let fileObj = { id: file.substr(0, 5), text: file.substr(0, 5) };
+        data.push(fileObj);
       });    
+      callback(null, data);
     }
   });
 };
