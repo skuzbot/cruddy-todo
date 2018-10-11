@@ -3,7 +3,7 @@ const path = require('path');
 const _ = require('underscore');
 const counter = require('./counter');
 
-var items = {};
+//var items = {};
 
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
@@ -40,44 +40,44 @@ exports.readAll = (callback) => {
 };
 
 exports.readOne = (id, callback) => {
-  //var text = items[id];
-  fs.readdir(exports.dataDir, (err, files) => {
+  fs.readFile(exports.dataDir + '/' + id + '.txt', (err, data) => {
     if (err) {
-      console.log('err is : ', err);
-      //console.log('error: no directory found');
+      callback(new Error(`No item with id: ${id}`));
     } else {
-    
-      if (err) {
-        console.log('id in fail', id);
-        callback(new Error(`No item with id: ${id}`));
-      } else {
-        console.log('id in else', id);
-        console.log('id in fileData', fileData);
-        callback( id, fileData );
-      }
+      idObj = { //test was expecting an object with id: and text: good call on using readFile
+        id: id, 
+        text: data.toString('utf8') 
+      };
+      callback(null, idObj);
     }
   });
 };
 
 exports.update = (id, text, callback) => {
-  var item = items[id];
-  if (!item) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    items[id] = text;
-    callback(null, { id, text });
-  }
+  fs.readFile(exports.dataDir + '/' + id + '.txt', (err, data) => {         
+    if (err) {
+      callback(new Error(`No item with id: ${id}`));
+    } else {
+      fs.writeFile(exports.dataDir + '/' + id + '.txt', text, (err) => {
+        if (err) {
+          console.log('error in update writefile');
+        } else {
+          callback(null, { 'id': id, 'text': text });
+        }
+      });
+    }
+  });
+  
 };
 
 exports.delete = (id, callback) => {
-  var item = items[id];
-  delete items[id];
-  if (!item) {
-    // report an error if item not found
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    callback();
-  }
+  fs.unlink(exports.dataDir + '/' + id + '.txt', (err) => {
+    if (err) {
+      callback(new Error(`No item with id: ${id}`));
+    } else {
+      callback();
+    }
+  });
 };
 
 // Config+Initialization code -- DO NOT MODIFY /////////////////////////////////
