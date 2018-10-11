@@ -46,8 +46,7 @@ exports.readOne = (id, callback) => {
     } else {
       idObj = { //test was expecting an object with id: and text: good call on using readFile
         id: id, 
-        text: data.toString('utf8') 
-      };
+        text: data.toString('utf8') };
       callback(null, idObj);
     }
   });
@@ -61,13 +60,13 @@ exports.update = (id, text, callback) => {
       fs.writeFile(exports.dataDir + '/' + id + '.txt', text, (err) => {
         if (err) {
           console.log('error in update writefile');
+          //console.log(new Error(`No item with id: ${id}`));
         } else {
           callback(null, { 'id': id, 'text': text });
         }
       });
     }
   });
-  
 };
 
 exports.delete = (id, callback) => {
