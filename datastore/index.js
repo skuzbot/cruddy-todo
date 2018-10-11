@@ -12,7 +12,7 @@ exports.create = (text, callback) => {
     
     id = count;
     const filename = exports.dataDir + '/' + id + '.txt';
-    items[id] = text;
+    //items[id] = text;
   
     fs.writeFile(filename, text, (err) => {
       if (err) {
