@@ -46,15 +46,15 @@ exports.readOne = (id, callback) => {
       console.log('err is : ', err);
       //console.log('error: no directory found');
     } else {
-      fs.readFile(exports.dataDir, (err, fileData) => {
-        if (err) {
-          console.log('id in fail', id);
-          callback(new Error(`No item with id: ${id}`));
-        } else {
-          console.log('id in else', id);
-          callback({ id, fileData });
-        }
-      });
+    
+      if (err) {
+        console.log('id in fail', id);
+        callback(new Error(`No item with id: ${id}`));
+      } else {
+        console.log('id in else', id);
+        console.log('id in fileData', fileData);
+        callback( id, fileData );
+      }
     }
   });
 };
